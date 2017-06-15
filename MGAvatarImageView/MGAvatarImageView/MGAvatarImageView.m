@@ -69,6 +69,10 @@
 }
 
 - (void)p_openCamera {
+    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        [self p_showErrorMessage:@"该设备没有相机"];
+        return;
+    }
     UIImagePickerController *pickerImage = [[UIImagePickerController alloc] init];
     pickerImage.sourceType = UIImagePickerControllerSourceTypeCamera;
     pickerImage.delegate = self;
@@ -77,12 +81,33 @@
 }
 
 - (void)p_openPhotoLibrary {
+    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+        [self p_showErrorMessage:@"该设备没有相册"];
+        return;
+    }
     UIImagePickerController *pickerImage = [[UIImagePickerController alloc] init];
     pickerImage.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     pickerImage.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
     pickerImage.delegate = self;
     pickerImage.allowsEditing = YES;
     [self.sourceViewController presentViewController:pickerImage animated:YES completion:^{}];
+}
+
+- (void)p_showErrorMessage:(NSString *)message {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_8_0
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:message delegate:nil cancelButtonTitle:@"好的" otherButtonTitles:nil, nil];
+    [alert show];
+#endif
+    
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_8_0
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"提示"
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault
+                                                          handler:NULL];
+    [alert addAction:defaultAction];
+    [self.sourceViewController presentViewController:alert animated:YES completion:nil];
+#endif
 }
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_8_0
