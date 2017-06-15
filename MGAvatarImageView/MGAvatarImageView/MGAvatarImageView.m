@@ -21,7 +21,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.userInteractionEnabled = YES;
-        self.contentMode = UIViewContentModeScaleAspectFit;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(p_imageViewDidTap)];
         [self addGestureRecognizer:tap];
     }
@@ -76,7 +75,7 @@
     UIImagePickerController *pickerImage = [[UIImagePickerController alloc] init];
     pickerImage.sourceType = UIImagePickerControllerSourceTypeCamera;
     pickerImage.delegate = self;
-    pickerImage.allowsEditing = YES;
+    pickerImage.allowsEditing = self.imageType == MGAvatarImageViewTypeAvatar ? YES : NO;
     [self.sourceViewController presentViewController:pickerImage animated:YES completion:^{}];
 }
 
@@ -89,7 +88,7 @@
     pickerImage.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     pickerImage.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
     pickerImage.delegate = self;
-    pickerImage.allowsEditing = YES;
+    pickerImage.allowsEditing = self.imageType == MGAvatarImageViewTypeAvatar ? YES : NO;
     [self.sourceViewController presentViewController:pickerImage animated:YES completion:^{}];
 }
 
@@ -131,7 +130,12 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     [picker dismissViewControllerAnimated:YES completion:^{
-        UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
+        UIImage *image;
+        if (self.imageType == MGAvatarImageViewTypeAvatar) {
+            image = [info objectForKey:UIImagePickerControllerEditedImage];
+        } else {
+            image = [info objectForKey:UIImagePickerControllerOriginalImage];
+        }
         self.image = image;
         if ([self.delegate respondsToSelector:@selector(imageView:didSelectImage:)]) {
             [self.delegate imageView:self didSelectImage:image];

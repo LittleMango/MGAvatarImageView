@@ -24,6 +24,7 @@
     MGAvatarImageView *avatarIV = [[MGAvatarImageView alloc] initWithFrame:CGRectMake(100, 100, 200, 200)];
     avatarIV.backgroundColor = [UIColor grayColor];
     avatarIV.delegate = self;
+//    avatarIV.imageType = MGAvatarImageViewTypeOriginScale;
     self.avatarIV = avatarIV;
     [self.view addSubview:avatarIV];
     
