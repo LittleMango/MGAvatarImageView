@@ -25,4 +25,6 @@ typedef NS_ENUM(NSUInteger, MGAvatarImageViewType) {
 /** 图片是否直接使用原始图片的宽高比例，默认是NO*/
 @property(nonatomic, assign)MGAvatarImageViewType imageType;
 
+/** 调用该方法也可以弹出选择列表，用于点击控件所在的父控件比如Cell的时候有弹出头像选择的需求的时候 */
+- (void)show;
 @end

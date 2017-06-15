@@ -21,13 +21,13 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(p_imageViewDidTap)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(p_showSheetView)];
         [self addGestureRecognizer:tap];
     }
     return self;
 }
 
-
+#pragma mark - accessor
 - (UIViewController *)sourceViewController {
     for (UIView* next = [self superview]; next; next = next.superview) {
         UIResponder *nextResponder = [next nextResponder];
@@ -38,8 +38,13 @@
     return nil;
 }
 
+#pragma mark - public method
+- (void)show {
+    [self p_showSheetView];
+}
+
 #pragma mark - private method
-- (void)p_imageViewDidTap {
+- (void)p_showSheetView {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_8_0
     UIActionSheet *choiceSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                              delegate:self
