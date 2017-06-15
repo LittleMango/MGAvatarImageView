@@ -20,4 +20,5 @@
     //该方法在用户选中、裁剪完图片之后会将结果传递过来
 }
 ```
+也可以在合适的地方，比如点击MGAvatarImageView所在TableView的cell的时候，调用`- (void)show`方法弹出Sheet选择列表。
 
