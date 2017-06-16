@@ -7,9 +7,9 @@
 //
 
 #import "MGAvatarImageView.h"
+#import "UIImagePickerController+MGStatusBar.h"
 
-
-@interface MGAvatarImageView()<UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate>
+@interface MGAvatarImageView()<UINavigationControllerDelegate,UIImagePickerControllerDelegate, UIActionSheetDelegate>
 @property (strong , nonatomic) UIImagePickerController *imagePickerVC;
 @property (strong , nonatomic) UITapGestureRecognizer *singleTap;
 @property(nonatomic, weak)UIViewController *sourceViewController;
@@ -17,12 +17,14 @@
 @implementation MGAvatarImageView
 
 #pragma mark - lifecycle
+
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.userInteractionEnabled = YES;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(p_showSheetView)];
         [self addGestureRecognizer:tap];
+        [self setNavItemColor:[UIColor blackColor]];
     }
     return self;
 }
@@ -38,6 +40,35 @@
     return nil;
 }
 
+- (void)setNavItemColor:(UIColor *)navItemColor {
+    _navItemColor = navItemColor;
+    UIBarButtonItem *appearance;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_9_0
+    appearance = [UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil];
+#endif
+    
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_9_0
+    appearance = [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UIImagePickerController class]]];
+#endif
+    //设置所有导航条上item的textColor
+    NSDictionary *dictNormal = @{
+                                 NSForegroundColorAttributeName : _navItemColor,
+                                 };
+    [appearance setTitleTextAttributes:dictNormal forState:UIControlStateNormal];
+}
+
+- (UIColor *)navImageColor {
+    return _navImageColor ?: [UIColor blackColor];
+}
+
+- (UIColor *)navBarBackgroundColor {
+    return _navBarBackgroundColor ?: [UIColor whiteColor];
+}
+
+- (UIColor *)sheetTitleColor {
+    return _sheetTitleColor ?: [UIColor blackColor];
+}
+
 #pragma mark - public method
 - (void)show {
     [self p_showSheetView];
@@ -51,6 +82,7 @@
                                                     cancelButtonTitle:@"取消"
                                                destructiveButtonTitle:nil
                                                     otherButtonTitles:@"拍照", @"从相册中选取", nil];
+    choiceSheet.delegate = self;
     [choiceSheet showInView:self.sourceViewController.view];
 #endif
     
@@ -58,7 +90,7 @@
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleActionSheet];
-    
+    alert.view.tintColor = self.sheetTitleColor;
     [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:NULL]];
     
     [alert addAction:[UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -81,6 +113,10 @@
     pickerImage.sourceType = UIImagePickerControllerSourceTypeCamera;
     pickerImage.delegate = self;
     pickerImage.allowsEditing = self.imageType == MGAvatarImageViewTypeAvatar ? YES : NO;
+    pickerImage.navigationBar.tintColor = self.navImageColor;
+    pickerImage.navigationBar.barTintColor = self.navBarBackgroundColor;
+    pickerImage.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : self.navItemColor};
+    pickerImage.mg_statusBarStyle = self.statusBarStyle;
     [self.sourceViewController presentViewController:pickerImage animated:YES completion:^{}];
 }
 
@@ -94,6 +130,10 @@
     pickerImage.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
     pickerImage.delegate = self;
     pickerImage.allowsEditing = self.imageType == MGAvatarImageViewTypeAvatar ? YES : NO;
+    pickerImage.navigationBar.tintColor = self.navImageColor;
+    pickerImage.navigationBar.barTintColor = self.navBarBackgroundColor;
+    pickerImage.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : self.navItemColor};
+    pickerImage.mg_statusBarStyle = self.statusBarStyle;
     [self.sourceViewController presentViewController:pickerImage animated:YES completion:^{}];
 }
 
@@ -117,7 +157,6 @@
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_8_0
 #pragma mark - UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSLog(@"index:%ld", buttonIndex);
     switch (buttonIndex) {
         case 0:
             //拍照
@@ -127,6 +166,20 @@
             //相册
             [self p_openPhotoLibrary];
             break;
+    }
+}
+
+- (void)willPresentActionSheet:(UIActionSheet *)actionSheet {
+    //在高版本中，actionSheet.subviews为空数组对象，苹果限制了，运行在低版本的机子上没问题
+    for (UIView *subView in actionSheet.subviews) {
+        if ([subView isKindOfClass:[UILabel class]]) {
+            UILabel *label = (UILabel *)subView;
+            label.textColor = self.sheetTitleColor;
+        }
+        if ([subView isKindOfClass:[UIButton class]]) {
+            UIButton *button = (UIButton*)subView;
+            [button setTitleColor:self.sheetTitleColor forState:UIControlStateNormal];
+        }
     }
 }
 #endif
@@ -147,5 +200,4 @@
         }
     }];
 }
-
 @end

@@ -16,6 +16,7 @@
 		DBF396341EF277E3004A34BC /* MGAvatarImageViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DBF396331EF277E3004A34BC /* MGAvatarImageViewTests.m */; };
 		DBF3963F1EF277E3004A34BC /* MGAvatarImageViewUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = DBF3963E1EF277E3004A34BC /* MGAvatarImageViewUITests.m */; };
 		DBF3964F1EF27829004A34BC /* MGAvatarImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DBF3964E1EF27829004A34BC /* MGAvatarImageView.m */; };
+		DBF396571EF38133004A34BC /* UIImagePickerController+MGStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = DBF396561EF38133004A34BC /* UIImagePickerController+MGStatusBar.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,8 @@
 		DBF3964E1EF27829004A34BC /* MGAvatarImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGAvatarImageView.m; sourceTree = "<group>"; };
 		DBF396501EF279E1004A34BC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		DBF396511EF279E1004A34BC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		DBF396551EF38133004A34BC /* UIImagePickerController+MGStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImagePickerController+MGStatusBar.h"; sourceTree = "<group>"; };
+		DBF396561EF38133004A34BC /* UIImagePickerController+MGStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImagePickerController+MGStatusBar.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +154,8 @@
 			children = (
 				DBF3964D1EF27829004A34BC /* MGAvatarImageView.h */,
 				DBF3964E1EF27829004A34BC /* MGAvatarImageView.m */,
+				DBF396551EF38133004A34BC /* UIImagePickerController+MGStatusBar.h */,
+				DBF396561EF38133004A34BC /* UIImagePickerController+MGStatusBar.m */,
 			);
 			path = MGAvatarImageView;
 			sourceTree = "<group>";
@@ -291,6 +296,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBF396571EF38133004A34BC /* UIImagePickerController+MGStatusBar.m in Sources */,
 				DBF396211EF277E3004A34BC /* ViewController.m in Sources */,
 				DBF3961E1EF277E3004A34BC /* AppDelegate.m in Sources */,
 				DBF3961B1EF277E3004A34BC /* main.m in Sources */,
@@ -536,6 +542,7 @@
 				DBF396451EF277E3004A34BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DBF396461EF277E3004A34BC /* Build configuration list for PBXNativeTarget "MGAvatarImageViewTests" */ = {
 			isa = XCConfigurationList;
@@ -544,6 +551,7 @@
 				DBF396481EF277E3004A34BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DBF396491EF277E3004A34BC /* Build configuration list for PBXNativeTarget "MGAvatarImageViewUITests" */ = {
 			isa = XCConfigurationList;
@@ -552,6 +560,7 @@
 				DBF3964B1EF277E3004A34BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
