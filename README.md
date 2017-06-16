@@ -31,3 +31,5 @@
 ```
 也可以在合适的地方，比如点击MGAvatarImageView所在TableView的cell的时候，调用`- (void)show`方法弹出Sheet选择列表。
 
+具体简介可以看[简书控件对应的文章](http://www.jianshu.com/p/bbf7c36c06fd)
+
