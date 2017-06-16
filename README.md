@@ -10,9 +10,18 @@
 ```
 - (void)viewDidLoad {
     [super viewDidLoad];
-    MGAvatarImageView *avatarIV = [[MGAvatarImageView alloc] initWithFrame:CGRectMake(100, 100, 200, 200)];
-    avatarIV.delegate = self; //如果控制器需要拿到最终的UIImage对象，则需要代理
+    //最少的配置只需要以下两行代码即可实现所有功能
+    MGAvatarImageView *avatarIV = [[MGAvatarImageView alloc] initWithFrame:CGRectMake(100, 100, 200, 200)];
     [self.view addSubview:avatarIV];
+    
+    //以下属性属于选填，可以不设置，不设置则采用默认值
+    avatarIV.delegate = self;
+    avatarIV.navItemColor = [UIColor redColor]; //默认为blackColor
+    avatarIV.navImageColor = [UIColor redColor]; //默认为blackColor
+    avatarIV.navBarBackgroundColor = MatchaColor; //默认为whiteColor
+    avatarIV.sheetTitleColor = [UIColor redColor]; //默认为blackColor
+    avatarIV.imageType = MGAvatarImageViewTypeAvatar; //默认为MGAvatarImageViewTypeAvatar
+    avatarIV.statusBarStyle = UIStatusBarStyleLightContent; // 默认为UIStatusBarStyleDefault
 }
 
 #pragma mark - MGAvatarImageViewDelegate
