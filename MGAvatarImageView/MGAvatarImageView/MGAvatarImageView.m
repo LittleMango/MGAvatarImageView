@@ -8,6 +8,8 @@
 
 #import "MGAvatarImageView.h"
 #import "UIImagePickerController+MGStatusBar.h"
+#import <Photos/Photos.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface MGAvatarImageView()<UINavigationControllerDelegate,UIImagePickerControllerDelegate, UIActionSheetDelegate>
 @property (strong , nonatomic) UIImagePickerController *imagePickerVC;
@@ -94,7 +96,7 @@
     [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:NULL]];
     
     [alert addAction:[UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self p_openCamera];
+        [self p_cameraAuthorizationCheck];
     }]];
     
     [alert addAction:[UIAlertAction actionWithTitle:@"从相册中选取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -104,11 +106,36 @@
 #endif
 }
 
-- (void)p_openCamera {
-    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+- (void)p_cameraAuthorizationCheck {
+    // 1、 获取摄像设备
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if (device) {
+        // 判断授权状态
+        NSString *mediaType = AVMediaTypeVideo;
+        //读取设备授权状态
+        AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
+        if (status == AVAuthorizationStatusRestricted) { // 因为家长控制, 导致应用无法方法相机(跟用户的选择没有关系)
+            [self p_showErrorMessage:@"家长控制权限限制使用该功能"];
+        } else if (status == AVAuthorizationStatusDenied) { // 用户拒绝当前应用访问相机
+            NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+            NSString *appName = [infoDictionary objectForKey:@"CFBundleDisplayName"];
+            [self p_showErrorMessage:[NSString stringWithFormat:@"请去-> [设置 - 隐私 - 相机 - %@ 打开访问开关", appName]];
+        } else if (status == AVAuthorizationStatusAuthorized) { // 用户允许当前应用访问相机
+            [self p_openCamera];
+        } else if (status == AVAuthorizationStatusNotDetermined) { // 用户还没有做出选择
+            // 弹框请求用户授权
+            [AVCaptureDevice requestAccessForMediaType:mediaType completionHandler:^(BOOL granted) {
+                if (granted) {
+                    [self p_openCamera];
+                }
+            }];
+        }
+    } else {
         [self p_showErrorMessage:@"该设备没有相机"];
-        return;
     }
+}
+
+- (void)p_openCamera {
     UIImagePickerController *pickerImage = [[UIImagePickerController alloc] init];
     pickerImage.sourceType = UIImagePickerControllerSourceTypeCamera;
     pickerImage.delegate = self;
@@ -160,7 +187,7 @@
     switch (buttonIndex) {
         case 0:
             //拍照
-            [self p_openCamera];
+            [self p_cameraAuthorizationCheck];
             break;
         case 1:
             //相册
